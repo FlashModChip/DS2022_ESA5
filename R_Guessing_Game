@@ -15,12 +15,8 @@ while(running)
 		if (y_or_no == "n")
 		{
 		     running <- FALSE
-		     break
 		}
-		else if (y_or_no == "y")
-		{
-		     break
-		}
+		break
            }
            else if (guessing_number < number_to_guess)
            {
