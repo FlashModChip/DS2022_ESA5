@@ -1,0 +1,34 @@
+running <- TRUE
+
+while(running)
+{ 
+     number_to_guess <- sample(1:100, 1)
+     guessed_number <- 0
+     
+     while(guessed_number != number_to_guess)
+     { 
+           guessing_number <- readline(prompt="guess a number between 1 and 100: ")
+           if (guessing_number == number_to_guess)
+           {
+                cat("you guessed right!")
+		y_or_no <- readline(prompt="new game? y or n: ")
+		if (y_or_no == "n")
+		{
+		     running <- FALSE
+		     break
+		}
+		else if (y_or_no == "y")
+		{
+		     break
+		}
+           }
+           else if (guessing_number < number_to_guess)
+           {
+                cat("try a bigger one")
+           }
+                else if(guessing_number > number_to_guess)
+           {
+                cat("try a smaller one")
+           }
+     }
+}
