@@ -1,0 +1,119 @@
+> #Zusammenfassung: Erkentnisse aus dem esoph Datensatz.
+> # hierzu wurde unter anderem die Zuhilfenahme des Artikels 
+> #https://rstudio-pubs-static.s3.amazonaws.com/111594_35981f8fc4de46a6957517c2f234faa9.html verwendet.
+
+?esoph
+
+> # Retrieve the dimension of an object.
+> dim (esoph)
+[1] 88  5
+
+> nrow(esoph)
+[1] 88
+
+> ncol(esoph)
+[1] 6
+
+> head(esoph)
+  agegp     alcgp    tobgp ncases ncontrols cat_ncases
+1 25-34 0-39g/day 0-9g/day      0        40       rare
+2 25-34 0-39g/day    10-19      0        10       rare
+3 25-34 0-39g/day    20-29      0         6       rare
+4 25-34 0-39g/day      30+      0         5       rare
+5 25-34     40-79 0-9g/day      0        27       rare
+6 25-34     40-79    10-19      0         7       rare
+
+> summary(esoph)
+   agegp          alcgp         tobgp        ncases         ncontrols    
+ 25-34:15   0-39g/day:23   0-9g/day:24   Min.   : 0.000   Min.   : 1.00  
+ 35-44:15   40-79    :23   10-19   :24   1st Qu.: 0.000   1st Qu.: 3.00  
+ 45-54:16   80-119   :21   20-29   :20   Median : 1.000   Median : 6.00  
+ 55-64:16   120+     :21   30+     :20   Mean   : 2.273   Mean   :11.08  
+ 65-74:15                                3rd Qu.: 4.000   3rd Qu.:14.00  
+ 75+  :11  
+                              Max.   :17.000   Max.   :60.00  
+
+# mean/average of the nr of cases
+> mean (esoph$ncases)       
+[1] 2.272727
+
+# median of all controls
+> median (esoph$ncontrols)  
+[1] 6
+
+# mean nr of cases in ages 25-34 (rows 1 to 15)
+> mean (esoph$ncases[1:15]) 
+[1] 0.06666667
+
+> mean (esoph$ncases[15:25]) 
+[1] 0.4545455
+
+> # mean/average of the nr of cases, in smokers’ "30+" group
+> mean (subset(esoph$ncases, esoph$tobgp == "30+"))
+[1] 1.55
+
+> # all data concerning tobacco group "30+"
+> tobgp30_data <- esoph[which(esoph[,"tobgp"] == "30+"),]
+> # all data from tobacco group "30+" where the nr of cases is higher than zero
+> tobgp30_noZero <- tobgp30_data[which(tobgp30_data[, "ncases"] > 0 ),]
+> sum (tobgp30_noZero$ncases) # sum all cases of cancer
+[1] 31
+
+> # factorize the nr of cases in 3 levels, equally spaced, and add the new variable,
+> # as the new column cat_ncases, to our dataset
+> esoph$cat_ncases <- cut (esoph$ncases,3,labels=c("rare","med","freq"))
+> summary (esoph)
+   agegp          alcgp         tobgp        ncases         ncontrols     cat_ncases
+ 25-34:15   0-39g/day:23   0-9g/day:24   Min.   : 0.000   Min.   : 1.00   rare:79   
+ 35-44:15   40-79    :23   10-19   :24   1st Qu.: 0.000   1st Qu.: 3.00   med : 8   
+ 45-54:16   80-119   :21   20-29   :20   Median : 1.000   Median : 6.00   freq: 1   
+ 55-64:16   120+     :21   30+     :20   Mean   : 2.273   Mean   :11.08             
+ 65-74:15                                3rd Qu.: 4.000   3rd Qu.:14.00             
+ 75+  :11                                Max.   :17.000   Max.   :60.00  
+           
+> # basic scatterplot
+> # put labels on axis, main title, change point type and color
+> plot(esoph$ncases, esoph$ncontrols, xlab="Cases", ylab="Controls",
++      main="Cases vs Controls", pch=15, col="red")
+
+> # contingency table of age and alcohol groups
+> table(esoph$agegp, esoph$alcgp)
+       
+        0-39g/day 40-79 80-119 120+
+  25-34         4     4      3    4
+  35-44         4     4      4    3
+  45-54         4     4      4    4
+  55-64         4     4      4    4
+  65-74         4     3      4    4
+  75+           3     4      2    2
+
+> prop.table(table(esoph$agegp, esoph$alcgp))
+       
+         0-39g/day      40-79     80-119       120+
+  25-34 0.04545455 0.04545455 0.03409091 0.04545455
+  35-44 0.04545455 0.04545455 0.04545455 0.03409091
+  45-54 0.04545455 0.04545455 0.04545455 0.04545455
+  55-64 0.04545455 0.04545455 0.04545455 0.04545455
+  65-74 0.04545455 0.03409091 0.04545455 0.04545455
+  75+   0.03409091 0.04545455 0.02272727 0.02272727
+
+> #the average number of cases per age groups:
+> tapply(esoph$ncases, esoph$agegp, mean)
+     25-34      35-44      45-54      55-64      65-74        75+ 
+0.06666667 0.60000000 2.87500000 4.75000000 3.66666667 1.18181818 
+
+> #maximum number of controls per alcohol groups:
+> tapply(esoph$ncontrols, esoph$alcgp, max)
+0-39g/day     40-79    80-119      120+ 
+       60        40        18        10 
+
+> #maximum number of cases per age groups and alcohol groups
+> groups.list <- list(esoph$agegp, esoph$alcgp)
+> tapply(esoph$ncases, groups.list, max)
+      0-39g/day 40-79 80-119 120+
+25-34         0     0      0    1
+35-44         1     3      0    2
+45-54         1     6      6    4
+55-64         4     9      9    6
+65-74         5    17      6    3
+75+           2     2      1    2
