@@ -1,0 +1,9 @@
+#Exercise 3 (JULIA)
+
+julia> F = rand(Float64, (2, 4))
+2×4 Matrix{Float64}:
+ 0.700809  0.674132  0.391033  0.439872
+ 0.253682  0.588949  0.768591  0.960621
+
+julia> findmax(F)
+(0.9606207243653713, CartesianIndex(2, 4))
