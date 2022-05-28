@@ -1,0 +1,149 @@
+Exercise 4 (JULIA)
+
+1. Create two matrices of the same layout and test if addition and subtraction of the matrix works as expected: C = A + B 
+julia> A = rand(Int8, (3, 3))
+3×3 Matrix{Int8}:
+ 114   81  -9
+ -31   57  42
+  80  -44  75
+
+julia> B = rand(Int8, (3, 3))
+3×3 Matrix{Int8}:
+  -91  -34  -81
+  -13  -34    5
+ -127   87  -50
+
+julia> C = A + B
+3×3 Matrix{Int8}:
+  23  47  -90
+ -44  23   47
+ -47  43   25
+
+julia> A == C - B
+true
+
+2. Now compare matrix multiplication either this way A * B and this way A .* B. Whats the difference?! 
+julia> A * B
+3×3 Matrix{Int8}:
+  -44   11   69
+   74  -46  -72
+ -105  -75   46
+
+julia> B * A
+3×3 Matrix{Int8}:
+  72  -113  -28
+ -28   117   88
+  73   -56   23
+
+Matrix multiplication is non-commutative, which means that the order of the matrices must not be reversed when forming the product.
+
+3. What about matrix division with "/" or "\"?! 
+julia> A / B
+3×3 Matrix{Float64}:
+  0.241026  -4.24921  -0.635383
+ -0.922621   1.23807   0.778453
+ -0.678305   1.27125  -0.27402
+
+Matrix division using a polyalgorithm
+
+julia> A \ B
+3×3 Matrix{Float64}:
+ -0.825903    0.274166  -0.606524
+ -0.0549175  -0.758675  -0.158923
+ -0.844588    0.422467  -0.112943
+The \ operation here performs the linear solution.
+Matrix inverse. Computes matrix N such that M * N = I, where I is the identity matrix. Computed by solving the left-division N = M \ I.
+In the context of a square matrix A, A\B returns inverse(A) * B
+
+julia> J = rand(Int8, (2, 2))
+2×2 Matrix{Int8}:
+ -94  32
+ -47   1
+
+julia> G = rand(Int8, (2, 2))
+2×2 Matrix{Int8}:
+ -27  -79
+ -17    3
+
+julia> J / G
+2×2 Matrix{Float64}:
+ -0.183989   5.82163
+  0.0870787  2.6264
+
+julia> G/ J
+2×2 Matrix{Float64}:
+ -2.65248    5.87943
+  0.0879433  0.185816
+
+julia> J \ G
+2×2 Matrix{Float64}:
+ 0.366667  -0.124113
+ 0.233333  -2.83333
+
+julia> G \ J
+2×2 Matrix{Float64}:
+ 2.80548   -0.122893
+ 0.231039  -0.363062
+
+4. Create a 3x3 integer matrix A with useful numbers. Now try A+1, A-1, A*2, A/2. 
+julia> A
+3×3 Matrix{Int8}:
+ 114   81  -9
+ -31   57  42
+  80  -44  75
+
+julia> A + 1
+ERROR: MethodError: no method matching +(::Matrix{Int8}, ::Int64)
+For element-wise addition, use broadcasting with dot syntax: array .+ scalar
+Closest candidates are:
+  +(::Any, ::Any, ::Any, ::Any...) at C:...\Julia-1.7.2\share\julia\base\operators.jl:655
+  +(::T, ::T) where T<:Union{Int128, Int16, Int32, Int64, Int8, UInt128, UInt16, UInt32, UInt64, UInt8} at C:\Users\klick\AppData\Local\Programs\Julia-1.7.2\share\julia\base\int.jl:87
+  +(::Rational, ::Integer) at C:\Users\klick\AppData\Local\Programs\Julia-1.7.2\share\julia\base\rational.jl:311
+  ...
+Stacktrace:
+ [1] top-level scope
+   @ REPL[28]:1
+
+julia> A.+1
+3×3 Matrix{Int64}:
+ 115   82  -8
+ -30   58  43
+  81  -43  76
+
+julia> A .- 1
+3×3 Matrix{Int64}:
+ 113   80  -10
+ -32   56   41
+  79  -45   74
+
+julia> A * 2
+3×3 Matrix{Int64}:
+ 228  162  -18
+ -62  114   84
+ 160  -88  150
+
+julia> A / 2
+3×3 Matrix{Float64}:
+  57.0   40.5  -4.5
+ -15.5   28.5  21.0
+  40.0  -22.0  37.5
+
+5. Now multiply a 3x4 matrix with a suitable (4)vector. 
+julia> V = rand(Int8, (4))
+4-element Vector{Int8}:
+  -22
+ -127
+  -46
+  107
+
+julia> H = rand(Int8, (3, 4))
+3×4 Matrix{Int8}:
+  -75   37  -52   -66
+ -105  -27   20    28
+   40   68  100  -104
+
+julia> H * V
+3-element Vector{Int8}:
+  -39
+ -121
+  100
